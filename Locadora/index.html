@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>FilmeXYZ - Sistema de Empréstimo</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+    <h1>Sistema FilmeXYZ</h1>
+
+    <!-- CLIENTE -->
+    <section>
+        <h2>Cadastrar Cliente</h2>
+        <form id="form-cliente">
+            <label>Nome:</label>
+            <input type="text" id="cliente-nome" required>
+
+            <label>CPF:</label>
+            <input type="text" id="cliente-cpf" required>
+
+            <label>Telefone:</label>
+            <input type="text" id="cliente-telefone" required>
+
+            <button type="submit">Cadastrar Cliente</button>
+        </form>
+
+        <h3>Clientes cadastrados</h3>
+        <ul id="lista-clientes"></ul>
+    </section>
+
+    <!-- FILME -->
+    <section>
+        <h2>Cadastrar Filme</h2>
+        <form id="form-filme">
+            <label>Título:</label>
+            <input type="text" id="filme-titulo" required>
+
+            <label>Gênero:</label>
+            <input type="text" id="filme-genero" required>
+
+            <label>Ano de Lançamento:</label>
+            <input type="number" id="filme-ano" required>
+
+            <button type="submit">Cadastrar Filme</button>
+        </form>
+
+        <h3>Lista de Filmes</h3>
+        <ul id="lista-filmes"></ul>
+    </section>
+
+    <!-- 🔥 NOVA SEÇÃO: BUSCA EXTERNA DE FILME -->
+    <section>
+        <h2>Buscar Filme Externo</h2>
+
+        <label>Título do Filme:</label>
+        <input type="text" id="titulo-externo" placeholder="Ex: Matrix">
+
+        <button id="btn-buscar-externo">Buscar Filme Externo</button>
+
+        <div id="resultado-externo"></div>
+
+        <button id="btn-cadastrar-externo" style="display:none;">
+            Cadastrar Filme Importado
+        </button>
+    </section>
+
+    <!-- EMPRÉSTIMO -->
+    <section>
+        <h2>Registrar Empréstimo</h2>
+        <form id="form-emprestimo">
+
+            <label>ID do Cliente:</label>
+            <input type="number" id="emprestimo-cliente" required>
+
+            <label>ID do Filme:</label>
+            <input type="number" id="emprestimo-filme" required>
+
+            <label>Data Empréstimo:</label>
+            <input type="date" id="emprestimo-data" required>
+
+            <label>Data Devolução:</label>
+            <input type="date" id="emprestimo-devolucao" required>
+
+            <label>Status:</label>
+            <select id="emprestimo-status">
+                <option value="ATIVO">ATIVO</option>
+                <option value="DEVOLVIDO">DEVOLVIDO</option>
+            </select>
+
+            <label>Valor:</label>
+            <input type="number" step="0.01" id="emprestimo-valor" required>
+
+            <button type="submit">Registrar Empréstimo</button>
+        </form>
+
+        <h3>Empréstimos</h3>
+        <ul id="lista-emprestimos"></ul>
+    </section>
+
+    <script src="app.js"></script>
+</body>
+</html>
