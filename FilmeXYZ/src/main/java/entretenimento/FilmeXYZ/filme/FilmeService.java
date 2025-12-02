@@ -18,40 +18,56 @@ public class FilmeService {
 	@Autowired
 	private TmdbService tmdbService;
 
-	public FilmeEntitie buscarOuCadastrar(String titulo) {
-	    FilmeEntitie filme = repository.findByTitulo(titulo);
+	// --------------------------------------------------
+    // 🔍 BUSCAR APENAS — NÃO CADASTRA
+    // --------------------------------------------------
+    public FilmeEntitie buscarExterno(String titulo) {
 
-	    if (filme != null) {
-	        return filme;
-	    }
+        // Se já existe no banco → retorna
+        FilmeEntitie filme = repository.findByTitulo(titulo);
+        if (filme != null) {
+            return filme;
+        }
 
-	    TmdbMovieDTO externo = tmdbService.buscarFilme(titulo);
+        // Buscar na TMDB
+        TmdbMovieDTO externo = tmdbService.buscarFilme(titulo);
+        if (externo == null) {
+            return null;
+        }
 
-	    if (externo == null) {
-	        return null;
-	    }
+        // Criar entidade TEMPORÁRIA (não salva)
+        FilmeEntitie temp = new FilmeEntitie();
+        temp.setTitulo(externo.title);
+        temp.setGenero("Desconhecido");
 
-	    FilmeEntitie novo = new FilmeEntitie();
-	    novo.setTitulo(externo.title);
-	    novo.setGenero("Desconhecido");
+        temp.setAnoLancamento(
+                externo.release_date != null && externo.release_date.length() >= 4
+                        ? Integer.parseInt(externo.release_date.substring(0, 4))
+                        : null
+        );
 
-	    novo.setAnoLancamento(
-	        externo.release_date != null && externo.release_date.length() >= 4
-	            ? Integer.parseInt(externo.release_date.substring(0, 4))
-	            : null
-	    );
+        if (externo.poster_path != null) {
+            temp.setImagem("https://image.tmdb.org/t/p/w500" + externo.poster_path);
+        }
 
-	    // 🔥 ADICIONAR POSTER (TMDB usa prefixo)
-	    if (externo.poster_path != null) {
-	        novo.setImagem("https://image.tmdb.org/t/p/w500" + externo.poster_path);
-	    } else {
-	        novo.setImagem(null);
-	    }
+        return temp; // ⚠️ NÃO SALVA!
+    }
 
-	    return repository.save(novo);
-	}
+    // --------------------------------------------------
+    // 💾 CADASTRAR — SALVA O FILME IMPORTADO
+    // --------------------------------------------------
+    public FilmeEntitie cadastrarExterno(FilmeEntitie filmeTemp) {
 
-	
+        // Evitar títulos duplicados
+        FilmeEntitie existente = repository.findByTitulo(filmeTemp.getTitulo());
+        if (existente != null) {
+            return existente;
+        }
+
+        return repository.save(filmeTemp);
+    }
+
+
 	
 	public FilmeEntitie cadastrarFilme(FilmeEntitie filme) {
 		return repository.save(filme);

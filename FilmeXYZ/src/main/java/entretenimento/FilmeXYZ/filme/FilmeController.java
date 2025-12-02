@@ -53,21 +53,35 @@ public class FilmeController {
 		service.apagarFilme(idFilme);
 	}
 	
-	@GetMapping("/externo")
-	public ResponseEntity<FilmeEntitie> buscarFilmeExterno(@RequestParam String titulo) {
-	    FilmeEntitie filme = service.buscarOuCadastrar(titulo);
+	  // =========================================================
+    // 🌎 TMDB - BUSCAR EXTERNO (NÃO SALVA → APENAS MOSTRA)
+    // =========================================================
+    @GetMapping("/externo")
+    public ResponseEntity<?> buscarExterno(@RequestParam String titulo) {
+        FilmeEntitie filme = service.buscarExterno(titulo);
 
-	    if (filme == null) {
-	        return ResponseEntity.notFound().build();
-	    }
+        if (filme == null) {
+            return ResponseEntity.notFound().build();
+        }
 
-	    return ResponseEntity.ok(filme);
-	}
+        return ResponseEntity.ok(filme);
+    }
 
-	
-	
-	
-	
-	
-	
+    // =========================================================
+    // 🌎 TMDB - CADASTRAR EXTERNO (SALVA NO BANCO)
+    // =========================================================
+    @PostMapping("/externo")
+    public ResponseEntity<FilmeEntitie> cadastrarFilmeExterno(@RequestBody FilmeEntitie filmeTemp) {
+        FilmeEntitie salvo = service.cadastrarExterno(filmeTemp);
+        return ResponseEntity.ok(salvo);
+    }
 }
+	
+
+	
+	
+	
+	
+	
+	
+
